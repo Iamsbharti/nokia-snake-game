@@ -30,6 +30,20 @@ document.addEventListener('DomContentLoaded',()=>{
         currentSnake.forEach(index=> squares[index].classList.add('snake'))
         interval=setInterval(moveOutComes,intervalTime)
     }
+    //All the outcomes of the snake movements
+    function moveOutComes(){
+        //condition for snake hitting border and hitting self
+        if(
+            (currentSnake[0] + width >= (width*width) && direction === width)|| //if snake hits bottom border
+            (currentSnake[0] % width === width-1 && direction === 1)|| //snake hits right wall
+            (currentSnake[0] % width === 0 && direction=== -1)|| //snake hits left wall
+            (currentSnake[0] - width < 0 && direction === -width)|| //snake hits top wall
+            squares[currentSnake[0] + direction].classList.contains('snake')//if snake hits itself
+        ){
+            return clearInterval(interval) //clear the interval
+        }
+    }
+
     //assign functions to the keystrokes
     function controlled(e){
         squares[currentIndex].classList.remove('snake') //remove class snake from all square
