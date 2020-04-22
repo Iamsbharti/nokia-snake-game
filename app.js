@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const squares=document.querySelectorAll('.grid div')
     const scoreDisplay=document.querySelector('span')
     const startBtn=document.querySelector('button')
-
+    const gameStatus=document.querySelector('h4')
+    console.log(gameStatus)
     //Initialize Game components
     const width=10 //used to move snake head upon key strokes
     let currentIndex=0 //the first div in our grid
@@ -18,6 +19,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     //Start and restart the game
     function startGame(){
         console.log('startgame')
+        //set status on game start
+        gameStatus.innerText="Game Started"
+        gameStatus.style.color = "green"
         currentSnake.forEach(index=> squares[index].classList.remove('snake'))
         squares[appleIndex].classList.remove('apple')
         clearInterval(interval)
@@ -41,10 +45,13 @@ document.addEventListener('DOMContentLoaded',()=>{
             (currentSnake[0] - width < 0 && direction === -width)|| //snake hits top wall
             squares[currentSnake[0] + direction].classList.contains('snake')//if snake hits itself
         ){
-            console.log(appleIndex)
+            console.log("End Game")
+            //set status on game end
+            gameStatus.innerText="Wrong Move Game Finished!!"
+            gameStatus.style.color = "red"
             currentSnake.forEach(index=> squares[index].classList.remove('snake'))
             squares[appleIndex].classList.remove('apple')
-            //alert('wrong move!! Try Again')
+            
             
             return clearInterval(interval) //clear the interval
         }
