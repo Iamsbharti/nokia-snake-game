@@ -1,7 +1,7 @@
 document.addEventListener('DomContentLoaded',()=>{
     //get elements from the index
     const squares=document.querySelectorAll('.grid div')
-    const score=document.querySelector('span')
+    const scoreDisplay=document.querySelector('span')
     const startBtn=document.querySelector('button')
 
     //Initialize Game components
@@ -15,6 +15,21 @@ document.addEventListener('DomContentLoaded',()=>{
     let intervalTime=0
     let interval=0
 
+    //Start and restart the game
+    function startGame(){
+        currentSnake.forEach(index=> squares[index].classList.remove('snake'))
+        squares[appleIndex].classList.remove('apple')
+        clearInterval(interval)
+        score=0
+        //randomApple()
+        direction=1
+        scoreDisplay.innerText=score
+        intervalTime=1000
+        currentSnake=[2,1,0]
+        currentIndex=0
+        currentSnake.forEach(index=> squares[index].classList.add('snake'))
+        interval=setInterval(moveOutComes,intervalTime)
+    }
     //assign functions to the keystrokes
     function controlled(e){
         squares[currentIndex].classList.remove('snake') //remove class snake from all square
