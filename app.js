@@ -1,4 +1,4 @@
-document.addEventListener('DomContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',()=>{
     //get elements from the index
     const squares=document.querySelectorAll('.grid div')
     const scoreDisplay=document.querySelector('span')
@@ -17,11 +17,12 @@ document.addEventListener('DomContentLoaded',()=>{
 
     //Start and restart the game
     function startGame(){
+        console.log('startgame')
         currentSnake.forEach(index=> squares[index].classList.remove('snake'))
         squares[appleIndex].classList.remove('apple')
         clearInterval(interval)
         score=0
-        //randomApple()
+        randomApple()
         direction=1
         scoreDisplay.innerText=score
         intervalTime=1000
@@ -40,10 +41,39 @@ document.addEventListener('DomContentLoaded',()=>{
             (currentSnake[0] - width < 0 && direction === -width)|| //snake hits top wall
             squares[currentSnake[0] + direction].classList.contains('snake')//if snake hits itself
         ){
+            console.log(appleIndex)
+            currentSnake.forEach(index=> squares[index].classList.remove('snake'))
+            squares[appleIndex].classList.remove('apple')
+            //alert('wrong move!! Try Again')
+            
             return clearInterval(interval) //clear the interval
         }
-    }
 
+        //get TAIL
+        const tail=currentSnake.pop() //remove & get last item of the array
+        squares[tail].classList.remove('snake') //remove class 'snake' from TAIL
+        currentSnake.unshift(currentSnake[0]+direction)//gives direction to the HEAD based on keystrokes
+
+        //when snake hits the apple
+        if(squares[currentSnake[0]].classList.contains('apple')){
+            squares[currentSnake[0]].classList.remove('apple')
+            squares[tail].classList.add('snake')
+            currentSnake.push(tail) //increases the size of snake
+            randomApple()
+            score++
+            scoreDisplay.innerText=score
+            clearInterval(interval)
+            intervalTime = intervalTime * speed //increase speed
+            interval=setInterval(moveOutComes,intervalTime)
+        }
+        squares[currentSnake[0]].classList.add('snake')
+    }
+    function randomApple(){
+        do{
+            appleIndex=Math.floor(Math.random() * squares.length)
+        }while(squares[appleIndex].classList.contains('snake')) //make sure appleIndex doen't have the snake class
+        squares[appleIndex].classList.add('apple') //add apple-class to the generated index
+    }
     //assign functions to the keystrokes
     function controlled(e){
         squares[currentIndex].classList.remove('snake') //remove class snake from all square
@@ -53,12 +83,13 @@ document.addEventListener('DomContentLoaded',()=>{
         }else if(e.keyCode===38){
             direction=-width //on up arrow press,snake will go back ten div,appearing to go up
         }else if(e.keyCode===37){
-            direction=1 //on left arrow press ,snake will go left one div
+            direction=-1 //on left arrow press ,snake will go left one div
         }else if(e.keyCode===40){
             direction=+width //on down arrow press ,the HEAD will instantly appear in the dic ten divs from the current position
         }
     }
     //event listener for every key press
     document.addEventListener('keyup',controlled)
+    startBtn.addEventListener('click',startGame)
 
 })
